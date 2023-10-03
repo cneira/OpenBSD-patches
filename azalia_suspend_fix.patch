@@ -1,0 +1,31 @@
+Index: azalia.c
+===================================================================
+RCS file: /cvs/src/sys/dev/pci/azalia.c,v
+retrieving revision 1.284
+diff -u -p -u -p -r1.284 azalia.c
+--- azalia.c	30 Jul 2023 08:46:03 -0000	1.284
++++ azalia.c	3 Oct 2023 00:47:17 -0000
+@@ -910,6 +910,7 @@ azalia_init(azalia_t *az, int resuming)
+ 		if (err)
+ 			return(err);
+ 	}
++
+
+ 	/* clear interrupt status */
+ 	AZ_WRITE_2(az, STATESTS, HDA_STATESTS_SDIWAKE);
+@@ -927,6 +928,15 @@ azalia_init(azalia_t *az, int resuming)
+ 	err = azalia_init_rirb(az, resuming);
+ 	if (err)
+ 		return(err);
++
++	if (resuming) {
++		err = azalia_init_codecs(az);
++		if (err)
++			return(err);
++		err = azalia_init_streams(az);
++		if (err)
++			return(err);
++	}
+
+ 	AZ_WRITE_4(az, INTCTL,
+ 	    AZ_READ_4(az, INTCTL) | HDA_INTCTL_CIE | HDA_INTCTL_GIE);

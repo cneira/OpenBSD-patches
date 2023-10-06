@@ -1,0 +1,17 @@
+Index: usb_subr.c
+===================================================================
+RCS file: /cvs/src/sys/dev/usb/usb_subr.c,v
+retrieving revision 1.158
+diff -u -p -u -p -r1.158 usb_subr.c
+--- usb_subr.c	16 Feb 2022 06:23:42 -0000	1.158
++++ usb_subr.c	6 Oct 2023 13:09:59 -0000
+@@ -1149,8 +1149,7 @@ usbd_new_device(struct device *parent, s
+ 		 dd->bDeviceProtocol, dd->bMaxPacketSize, dd->bLength,
+ 		 dev->speed));
+ 
+-	if ((dd->bDescriptorType != UDESC_DEVICE) ||
+-	    (dd->bLength < USB_DEVICE_DESCRIPTOR_SIZE)) {
++	if (dd->bLength < USB_DEVICE_DESCRIPTOR_SIZE) {
+ 		err = USBD_INVAL;
+ 		goto fail;
+ 	}
